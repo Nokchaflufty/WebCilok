@@ -11,7 +11,7 @@
     }
     
     .success-card {
-        background-color: #ededed; /* Grey matching the figma screen */
+        background-color: var(--card-bg); /* Grey matching the figma screen */
         border-radius: 25px;
         padding: 40px 60px 50px 60px; /* Generous padding */
         text-align: center;
@@ -19,12 +19,13 @@
         width: 100%;
         position: relative;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        border: 1px solid #dfdfdf;
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
     }
     
     .success-text {
         font-size: 1.1rem;
-        color: #333;
+        color: var(--text-color);
         line-height: 1.6;
         font-weight: 300;
         margin: 0;

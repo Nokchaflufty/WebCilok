@@ -31,13 +31,13 @@
         margin-top: 30px; /* Raised the center card a bit higher */
     }
     .menu-item {
-        background-color: #ededed;
+        background-color: var(--card-bg);
         border-radius: 20px;
         padding: 15px 15px 40px 15px; /* Heavy bottom padding to make space for overlapping button */
         text-align: center;
         position: relative;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
+        border: 1px solid var(--border-color);
     }
     .menu-img {
         width: 100%;
@@ -50,12 +50,12 @@
     }
     .menu-name {
         font-size: 1.4rem;
-        color: #111;
+        color: var(--text-color);
         font-weight: 300; /* Specifically a lighter font in the design */
     }
     .menu-price {
         font-size: 1.1rem;
-        color: #111;
+        color: var(--text-color);
         margin-bottom: 5px;
     }
     .btn-tambah {
@@ -120,6 +120,53 @@
         background-color: #a4232a;
     }
     
+    /* Cart Button Styles */
+    .cart-btn-qty, .cart-btn-remove {
+        background-color: #a4232a;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        transition: transform 0.1s, background-color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cart-btn-qty {
+        width: 28px;
+        height: 28px;
+        font-size: 1.2rem;
+        margin-right: 5px;
+    }
+    .cart-btn-remove {
+        padding: 5px 15px;
+        font-size: 0.85rem;
+        margin-left: 10px;
+        text-transform: uppercase;
+    }
+    .cart-btn-qty:hover, .cart-btn-remove:hover {
+        background-color: #8c1e24;
+        transform: scale(1.05);
+    }
+    .cart-btn-qty:active, .cart-btn-remove:active {
+        transform: scale(0.95);
+    }
+
+    /* Rounder Pesan Sekarang Button with Shadow */
+    .btn-order {
+        border-radius: 50px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        font-weight: 800;
+        text-transform: uppercase;
+        transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+    .btn-order:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.22);
+    }
+
     @media (max-width: 800px) {
         .menu-grid {
             grid-template-columns: 1fr;
@@ -169,9 +216,9 @@
 
 <!-- Cart Sidebar -->
 <div id="cartSidebar" class="cart-sidebar">
-    <div class="cart-header">
+    <div class="cart-header" style="color: var(--text-color);">
         <strong>Pesanan Anda</strong>
-        <button id="closeCart" style="background:none; border:none; font-size:1.2rem;">&times;</button>
+        <button id="closeCart" style="background:none; border:none; font-size:1.2rem; color: var(--text-color);">&times;</button>
     </div>
     <div id="cartItems" class="cart-items">
         <p style="text-align:center;">Belum ada pesanan</p>
@@ -247,13 +294,15 @@
         cart.forEach((item, idx) => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
-            html += `<div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:8px;">
-                        <div><strong>${item.name}</strong> x ${item.quantity}</div>
-                        <div>Rp ${itemTotal.toLocaleString('id-ID')}</div>
-                        <div style="margin-top:5px;">
-                            <button class="inc-qty" data-idx="${idx}">+</button>
-                            <button class="dec-qty" data-idx="${idx}">-</button>
-                            <button class="remove-item" data-idx="${idx}" style="margin-left:10px;">Hapus</button>
+            html += `<div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:8px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${item.name}</strong> x ${item.quantity}<br>
+                            <span style="font-size: 0.9rem; color: var(--text-secondary);">Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <button class="cart-btn-qty dec-qty" data-idx="${idx}">-</button>
+                            <button class="cart-btn-qty inc-qty" data-idx="${idx}">+</button>
+                            <button class="cart-btn-remove remove-item" data-idx="${idx}">Hapus</button>
                         </div>
                     </div>`;
         });
@@ -299,4 +348,4 @@
     });
     updateCartUI();
 </script>
-@endpush
+@endpush

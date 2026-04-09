@@ -1,0 +1,130 @@
+@extends('layouts.admin')
+
+@section('page_title', 'Tambah Menu')
+
+@section('content')
+<style>
+    .create-menu-wrapper {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    .photo-upload-container {
+        width: 180px;
+        height: 180px;
+        background: var(--admin-card-bg);
+        border: 2px solid var(--admin-text);
+        border-radius: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        box-shadow: var(--admin-shadow);
+    }
+    .photo-upload-container i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: var(--admin-text);
+    }
+    .photo-upload-container span {
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: var(--admin-text);
+    }
+    
+    .form-container-card {
+        background: var(--admin-card-bg);
+        border-radius: 25px;
+        padding: 25px 35px;
+        flex: 1;
+        box-shadow: var(--admin-shadow);
+        border: 1px solid var(--admin-border);
+    }
+    .form-container-card h3 {
+        text-align: center;
+        font-weight: 900;
+        margin-bottom: 25px;
+        font-size: 1.2rem;
+        color: var(--admin-text);
+    }
+    .form-group-sm {
+        margin-bottom: 15px;
+    }
+    .form-group-sm label {
+        display: block;
+        font-weight: 500;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+        color: var(--admin-text);
+        opacity: 0.8;
+    }
+    .form-input-sm {
+        width: 100%;
+        background: #e9e9e9;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        outline: none;
+        color: #333;
+    }
+    [data-theme="dark"] .form-input-sm {
+        background: #333;
+        border-color: #444;
+        color: white;
+    }
+    
+    .form-actions-sm {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .btn-simpan-sm {
+        background-color: #ff0000;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 8px 30px;
+        font-weight: 900;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(255,0,0,0.2);
+    }
+    .btn-batal-sm {
+        background: transparent;
+        border: none;
+        color: var(--admin-text);
+        font-weight: 800;
+        font-size: 1.1rem;
+        text-decoration: none;
+    }
+</style>
+
+<div class="create-menu-wrapper">
+    <div class="photo-upload-container">
+        <i class="fas fa-camera"></i>
+        <span>Tambah Foto</span>
+    </div>
+
+    <div class="form-container-card">
+        <h3>Tambah Menu</h3>
+        <form action="#" method="POST">
+            <div class="form-group-sm">
+                <label>Nama</label>
+                <input type="text" class="form-input-sm">
+            </div>
+            <div class="form-group-sm">
+                <label>Harga</label>
+                <input type="text" class="form-input-sm">
+            </div>
+            <div class="form-actions-sm">
+                <button type="submit" class="btn-simpan-sm">Simpan</button>
+                <a href="{{ route('admin.menu') }}" class="btn-batal-sm">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

@@ -27,6 +27,7 @@
         letter-spacing: -2px;
         text-transform: uppercase;
         margin: 0;
+        text-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
     }
 
     .home-btn-order {

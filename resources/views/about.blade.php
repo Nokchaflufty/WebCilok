@@ -8,7 +8,7 @@
         padding: 60px 20px;
     }
     .about-main-card {
-        background-color: #efefef; /* Very light grey outer canvas */
+        background-color: var(--bg-color); /* Very light grey outer canvas */
         border-radius: 40px; /* Extremely rounded */
         max-width: 950px;
         width: 100%;
@@ -17,6 +17,7 @@
         display: flex;
         flex-direction: column;
         gap: 35px; /* Creates the space between the red box and the contact box natively */
+        border: 1px solid var(--border-color);
     }
     .about-card-red {
         background-color: #a4232a;
@@ -30,14 +31,15 @@
         box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     }
     .about-card-contact {
-        background-color: #dadada;
+        background-color: var(--card-bg);
         border-radius: 35px;
         padding: 35px 50px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        border: 1px solid var(--border-color);
     }
     .about-card-contact h3 {
         font-weight: 800;
-        color: #444;
+        color: var(--text-color);
         margin-bottom: 20px;
         font-size: 1.4rem;
     }
@@ -46,9 +48,9 @@
         justify-content: space-between;
         align-items: center;
         padding: 15px 0;
-        border-bottom: 2px solid #a8a8a8; /* Distinct grey line separating entries */
+        border-bottom: 2px solid var(--border-color); /* Distinct grey line separating entries */
         font-size: 1.25rem;
-        color: #333;
+        color: var(--text-color);
         margin-bottom: 10px;
     }
     .contact-icon {
