@@ -33,8 +33,8 @@
         background-color: #a4232a;
         color: white;
         border-radius: 50px;
-        padding: 15px 55px; /* Wider padding for the prominent order block */
-        font-size: 1.3rem;
+        padding: 10px 35px; /* Smaller padding */
+        font-size: 1rem; /* Smaller font */
         font-weight: 800;
         text-decoration: none;
         display: inline-block;
@@ -64,6 +64,6 @@
             NAGIH
         </h1>
     </div>
-    <a href="{{ route('order') }}" class="home-btn-order">ORDER NOW!</a>
+    <a href="{{ route('menu') }}" class="home-btn-order">ORDER NOW!</a>
 </div>
 @endsection

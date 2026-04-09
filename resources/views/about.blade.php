@@ -27,11 +27,13 @@
         font-weight: 500;
         line-height: 1.6;
         text-align: justify;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
     }
     .about-card-contact {
-        background-color: #dadada; /* Distinctly darker than the outer card, forming its own visible rounded block */
+        background-color: #dadada;
         border-radius: 35px;
         padding: 35px 50px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
     }
     .about-card-contact h3 {
         font-weight: 800;
