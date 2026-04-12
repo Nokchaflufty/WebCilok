@@ -103,7 +103,7 @@
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #ccc;
+            color: #111111;
             font-size: 1.2rem;
         }
         .login-input {
@@ -127,6 +127,31 @@
             margin-bottom: 30px;
             color: #333;
             font-weight: 500;
+            cursor: pointer;
+        }
+        .remember-me input {
+            display: none;
+        }
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            background: transparent;
+        }
+        .remember-me input:checked + .custom-checkbox {
+            background: #000;
+        }
+        .remember-me input:checked + .custom-checkbox::after {
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: white;
+            font-size: 0.8rem;
         }
         .btn-login-submit {
             background-color: #a4232a;
@@ -193,10 +218,11 @@
                     <input type="password" name="password" class="login-input" placeholder="masukan password" required>
                 </div>
 
-                <div class="remember-me">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Ingat saya</label>
-                </div>
+                <label class="remember-me">
+                    <input type="checkbox" name="remember">
+                    <span class="custom-checkbox"></span>
+                    Ingat saya
+                </label>
 
                 <button type="submit" class="btn-login-submit">LOGIN</button>
             </form>

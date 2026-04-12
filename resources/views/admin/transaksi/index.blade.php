@@ -93,10 +93,18 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Empty rows to match UI design -->
+                @forelse($transactions as $tx)
+                <tr onclick="document.getElementById('order_id_input').value = '{{ $tx->id }}'; document.getElementById('selected_order_kode').innerText = '{{ $tx->id }}';" style="cursor: pointer;">
+                    <td>{{ $tx->id }}</td>
+                    <td>{{ $tx->customer_name }}</td>
+                    <td>{{ number_format($tx->total_price, 0, ',', '.') }}</td>
+                    <td>{{ $tx->address }}</td>
+                    <td>{{ $tx->phone }}</td>
+                    <td>{{ $tx->status }}</td>
+                </tr>
+                @empty
                 <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+                @endforelse
             </tbody>
         </table>
     </div>
@@ -121,14 +129,17 @@
         </table>
     </div>
 
-    <div class="update-status-bar">
-        <select class="status-select">
+    <form action="{{ route('admin.transaksi.update_status') }}" method="POST" class="update-status-bar">
+        @csrf
+        <input type="hidden" name="order_id" id="order_id_input">
+        <span style="color: var(--admin-text); font-weight: 700;">Update Status untuk ID: <span id="selected_order_kode">-</span></span>
+        <select name="status" class="status-select" required>
             <option value="">Pilih Status</option>
             <option value="proses">Proses</option>
             <option value="selesai">Selesai</option>
             <option value="batal">Batal</option>
         </select>
-        <button class="btn-update-status">Update Status</button>
-    </div>
+        <button type="submit" class="btn-update-status">Update Status</button>
+    </form>
 </div>
 @endsection

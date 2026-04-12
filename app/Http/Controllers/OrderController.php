@@ -57,6 +57,9 @@ class OrderController extends Controller
             ]);
         }
 
+        // Load relationships for notification
+        $order->load('orderItems.menu');
+
         // Send WhatsApp notification
         $this->sendWhatsAppNotification($order);
 

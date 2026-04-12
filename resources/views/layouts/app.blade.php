@@ -158,7 +158,7 @@
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">HOME</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">ABOUT US</a>
                 <a href="{{ route('menu') }}" class="{{ request()->routeIs('menu') ? 'active' : '' }}">MENU</a>
-                <a href="{{ route('order') }}" class="{{ request()->routeIs('order') ? 'active' : '' }}">PEMESANAN</a>
+
                 <a href="{{ route('admin.login') }}" class="btn-login">LOGIN</a>
             </div>
             <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">

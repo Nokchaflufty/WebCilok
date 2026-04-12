@@ -106,6 +106,7 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        margin-left: auto;
     }
     .action-btn {
         width: 35px;
@@ -118,6 +119,7 @@
         cursor: pointer;
         color: white;
         font-size: 1rem;
+        text-decoration: none;
     }
     .btn-edit { background-color: #9c92f8; }
     .btn-delete { background-color: #ffb4b4; }
@@ -140,14 +142,19 @@
         <div class="menu-list">
             @forelse($menus as $menu)
             <div class="menu-admin-item">
-                <img src="{{ asset('images/logo.jpeg') }}" class="menu-admin-img" alt="Menu Image">
+                <img src="{{ $menu->image ? asset('images/' . $menu->image) : asset('images/logo.jpeg') }}" class="menu-admin-img" alt="Menu Image">
                 <div class="menu-admin-info">
                     <h3 class="menu-admin-name">{{ $menu->name }}</h3>
                     <span class="menu-admin-price">{{ $menu->price }}</span>
                 </div>
                 <div class="menu-item-actions">
-                    <button class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
-                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
+                    <a href="{{ route('admin.menu.edit', $menu->id) }}" class="action-btn btn-edit"><i class="fas fa-pen"></i></a>
+                    <form id="delete-form-{{ $menu->id }}" action="{{ route('admin.menu.delete', $menu->id) }}" method="POST" style="display:none;">
+                        @csrf
+                    </form>
+                    <button type="button" class="action-btn btn-delete" onclick="showConfirm('Hapus Menu', 'Yakin ingin menghapus menu ini?', () => document.getElementById('delete-form-{{ $menu->id }}').submit())">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
             @empty

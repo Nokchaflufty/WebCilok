@@ -93,12 +93,93 @@ class AdminController extends Controller
         return view('admin.menu.create');
     }
 
+    public function menuStore(Request $request)
+    {
+        $this->checkAuth();
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $imageName = 'logo.jpeg'; 
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+        }
+
+        Menu::create([
+            'name' => $request->name,
+            'price' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
+            'price_numeric' => $request->price,
+            'image' => $imageName
+        ]);
+
+        return redirect()->route('admin.menu')->with('success', 'Menu berhasil ditambahkan.');
+    }
+
+    public function menuEdit($id)
+    {
+        $this->checkAuth();
+        $menu = Menu::findOrFail($id);
+        return view('admin.menu.edit', compact('menu'));
+    }
+
+    public function menuUpdate(Request $request, $id)
+    {
+        $this->checkAuth();
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $menu = Menu::findOrFail($id);
+        $data = [
+            'name' => $request->name,
+            'price' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
+            'price_numeric' => $request->price,
+        ];
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $data['image'] = $imageName;
+        }
+
+        $menu->update($data);
+
+        return redirect()->route('admin.menu')->with('success', 'Menu berhasil diupdate.');
+    }
+
+    public function menuDestroy($id)
+    {
+        $this->checkAuth();
+        $menu = Menu::findOrFail($id);
+        $menu->delete();
+
+        return redirect()->route('admin.menu')->with('success', 'Menu berhasil dihapus.');
+    }
+
     public function transaksi()
     {
         $this->checkAuth();
-        // Mocking transactions for the UI
-        $transactions = []; 
+        $transactions = Order::orderBy('created_at', 'desc')->get();
         return view('admin.transaksi.index', compact('transactions'));
+    }
+
+    public function transaksiUpdateStatus(Request $request)
+    {
+        $this->checkAuth();
+        $request->validate([
+            'order_id' => 'required',
+            'status' => 'required'
+        ]);
+
+        $order = Order::findOrFail($request->order_id);
+        $order->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
     public function riwayat()

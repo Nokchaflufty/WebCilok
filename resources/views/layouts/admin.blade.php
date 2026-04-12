@@ -119,6 +119,85 @@
             padding: 0 40px 40px 40px;
             flex: 1;
         }
+
+        /* Custom Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+        .custom-modal {
+            background: var(--admin-card-bg);
+            border-radius: 25px;
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid var(--admin-border);
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-overlay.active .custom-modal {
+            transform: scale(1);
+        }
+        .modal-icon {
+            font-size: 4rem;
+            color: #ff0000;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 15px rgba(255, 0, 0, 0.4));
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: var(--admin-text);
+        }
+        .modal-text {
+            font-size: 1rem;
+            color: var(--admin-text);
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn-modal {
+            padding: 10px 30px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-confirm {
+            background: #ff0000;
+            color: white;
+            box-shadow: 0 8px 20px rgba(255,0,0,0.3);
+        }
+        .btn-cancel {
+            background: #eee;
+            color: #333;
+        }
+        [data-theme="dark"] .btn-cancel {
+            background: #333;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -154,7 +233,44 @@
         </main>
     </div>
 
+    <!-- Custom Reusable Modal -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="custom-modal">
+            <div class="modal-icon"><i class="fas fa-exclamation-circle"></i></div>
+            <h3 class="modal-title" id="modalTitle">Konfirmasi</h3>
+            <p class="modal-text" id="modalText">Apakah Anda yakin ingin melakukan ini?</p>
+            <div class="modal-actions">
+                <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
+                <button class="btn-modal btn-confirm" id="confirmBtn">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Modal Logic
+        let currentCallback = null;
+
+        function showConfirm(title, text, callback) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            document.getElementById('confirmModal').classList.add('active');
+            currentCallback = callback;
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        document.getElementById('confirmBtn').addEventListener('click', () => {
+            if (currentCallback) currentCallback();
+            closeModal();
+        });
+
+        // Close on overlay click
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmModal') closeModal();
+        });
+
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');
         const htmlElement = document.documentElement;

@@ -21,7 +21,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/profile/edit', [AdminController::class, 'profileEdit'])->name('admin.profile.edit');
     Route::get('/menu', [AdminController::class, 'menu'])->name('admin.menu');
     Route::get('/menu/create', [AdminController::class, 'menuCreate'])->name('admin.menu.create');
+    Route::post('/menu/store', [AdminController::class, 'menuStore'])->name('admin.menu.store');
+    Route::get('/menu/{id}/edit', [AdminController::class, 'menuEdit'])->name('admin.menu.edit');
+    Route::post('/menu/{id}/update', [AdminController::class, 'menuUpdate'])->name('admin.menu.update');
+    Route::post('/menu/{id}/delete', [AdminController::class, 'menuDestroy'])->name('admin.menu.delete');
+    
     Route::get('/transaksi', [AdminController::class, 'transaksi'])->name('admin.transaksi');
+    Route::post('/transaksi/update-status', [AdminController::class, 'transaksiUpdateStatus'])->name('admin.transaksi.update_status');
     Route::get('/riwayat', [AdminController::class, 'riwayat'])->name('admin.riwayat');
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });

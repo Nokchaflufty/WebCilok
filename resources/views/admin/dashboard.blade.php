@@ -52,6 +52,9 @@
     }
 
     /* Table Styles */
+    .transactions-section {
+        margin-bottom: 60px;
+    }
     .transactions-section h3 {
         font-size: 1.5rem;
         font-weight: 900;
@@ -101,15 +104,15 @@
 
     .btn-lihat-semua {
         position: absolute;
-        bottom: -35px;
+        bottom: -50px;
         right: 15px;
         background-color: #ff0000;
         color: white;
         border: none;
         border-radius: 12px;
-        padding: 10px 35px;
+        padding: 8px 30px;
         font-weight: 800;
-        font-size: 1.3rem;
+        font-size: 1rem;
         box-shadow: 0 4px 15px rgba(255,0,0,0.3);
         text-decoration: none;
     }
@@ -179,7 +182,7 @@
                 </tbody>
             </table>
             
-            <a href="#" class="btn-lihat-semua">Lihat Transaksi</a>
+            <a href="{{ route('admin.transaksi') }}" class="btn-lihat-semua">Lihat Transaksi</a>
         </div>
     </div>
 </div>

@@ -82,46 +82,34 @@
         border: 1px solid var(--border-color);
     }
 
-    /* ── intl-tel-input: country dial-code selector ── */
-    .iti { width: 100%; display: block; }
-    .iti__tel-input {
+    /* Custom Styling for intl-tel-input to keep the PILL design */
+    .iti {
         width: 100%;
-        border: none;
-        border-radius: 50px;
-        padding: 12px 20px 12px 110px; /* left room for flag + dial code */
-        font-size: 14px;
-        background-color: var(--input-bg);
-        color: var(--text-color);
-        outline: none;
-        box-sizing: border-box;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        transition: box-shadow 0.3s ease;
-        border: 1px solid var(--border-color);
-    }
-    .iti__tel-input:focus {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
-    .iti--separate-dial-code .iti__flag-container {
-        border-radius: 50px 0 0 50px;
-    }
-    .iti--separate-dial-code .iti__selected-flag {
-        border-radius: 50px 0 0 50px;
-        background-color: #f0f0f0;
-        padding: 0 8px 0 14px;
-    }
-    .iti__country-list { border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-    /* digit hint / error messages */
-    .phone-hint {
-        font-size: 11px;
-        color: #888;
-        margin: 4px 0 0 15px;
         display: block;
     }
-    .phone-error {
-        font-size: 11px;
-        color: #a3222a;
-        margin: 4px 0 0 15px;
-        display: none;
+    .iti__tel-input {
+        border-radius: 50px !important; /* Force pill shape */
+        padding-left: 95px !important; /* Make room for flag */
+    }
+    .iti__selected-flag {
+        border-radius: 50px 0 0 50px !important;
+        padding-left: 20px !important;
+        background-color: transparent !important;
+    }
+    .iti__country-list {
+        border-radius: 15px !important;
+        overflow-y: auto !important; /* Enable scrolling */
+        max-height: 250px !important; /* Set a comfortable height */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+        background-color: var(--card-bg) !important;
+        color: var(--text-color) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+    .iti__country {
+        padding: 10px 15px !important;
+    }
+    .iti__country:hover {
+        background-color: rgba(0,0,0,0.05) !important;
     }
     /* select dropdown styled to match pill inputs */
     .form-group-custom .select-custom {
@@ -148,6 +136,51 @@
         box-shadow: 0 4px 12px rgba(163,34,42,0.15);
         outline: none;
     }
+
+    /* Success Modal Styling */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(5px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .success-modal {
+        background: white;
+        padding: 40px;
+        border-radius: 30px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease-out;
+    }
+    .modal-icon-success {
+        font-size: 4rem;
+        color: #4CAF50;
+        margin-bottom: 20px;
+    }
+    .modal-title-success {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .modal-text-success {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.4;
+    }
+    @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
 </style>
 
 <div class="container pemesanan-wrapper">
@@ -160,9 +193,9 @@
             </div>
             <div class="form-group-custom">
                 <label>No. Whatsapp</label>
-                <input type="tel" id="whatsappInput" name="whatsapp" inputmode="numeric" required>
-                <span class="phone-hint" id="phoneHint">Memuat info negara…</span>
-                <span class="phone-error" id="phoneError">Nomor tidak valid untuk negara yang dipilih.</span>
+                <input type="tel" id="whatsappInput" name="whatsapp" class="form-control-custom" placeholder="081234567890" inputmode="numeric" required>
+                <span id="phoneHint" style="font-size: 10px; opacity: 0.6; margin-left: 15px; display: block; margin-top: 5px;"></span>
+                <span class="phone-error" id="phoneError" style="font-size: 11px; color: #a3222a; margin: 4px 0 0 15px; display: none;">Nomor tidak valid.</span>
             </div>
             <div class="form-group-custom">
                 <label>Alamat</label>
@@ -190,6 +223,16 @@
         </form>
     </div>
 </div>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal-overlay">
+    <div class="success-modal">
+        <div class="modal-icon-success"><i class="fas fa-check-circle"></i></div>
+        <h3 class="modal-title-success">Pesanan Sudah Masuk!</h3>
+        <p class="modal-text-success">Pesanan Anda telah kami terima dan sedang diproses oleh admin Warung Cilok Mak Pik. Jika ada pertanyaan, hubungi nomor WhatsApp kami di <strong>0815-1387-9206</strong>.</p>
+        <button class="pemesanan-btn" style="position: static; margin-top: 10px;" onclick="window.location.href='{{ route('home') }}'">OK</button>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -211,37 +254,53 @@
         $('#orderSummary').show();
     }
 
-    // ── intl-tel-input: country selector + digit limits ──────────────────────
-    // Per-country digit limits (subscriber digits, excluding country code).
-    // Falls back to { min:7, max:15 } for unlisted countries.
+    const phoneInput  = document.getElementById('whatsappInput');
+    const phoneError  = document.getElementById('phoneError');
+    const phoneHint  = document.getElementById('phoneHint');
+
     const DIGIT_LIMITS = {
-        id: { min: 9,  max: 13, name: 'Indonesia'    },
-        my: { min: 9,  max: 11, name: 'Malaysia'     },
-        sg: { min: 8,  max: 8,  name: 'Singapura'    },
-        us: { min: 10, max: 10, name: 'Amerika Serikat' },
-        gb: { min: 10, max: 10, name: 'Inggris'      },
-        au: { min: 9,  max: 9,  name: 'Australia'    },
-        jp: { min: 10, max: 11, name: 'Jepang'       },
-        kr: { min: 9,  max: 11, name: 'Korea Selatan'},
-        cn: { min: 11, max: 11, name: 'China'        },
-        in: { min: 10, max: 10, name: 'India'        },
-        sa: { min: 9,  max: 9,  name: 'Arab Saudi'   },
-        ae: { min: 9,  max: 9,  name: 'UAE'          },
-        nl: { min: 9,  max: 9,  name: 'Belanda'      },
-        de: { min: 10, max: 11, name: 'Jerman'       },
-        fr: { min: 9,  max: 9,  name: 'Prancis'      },
+        id: { min: 9,  max: 13, name: 'Indonesia' },
+        my: { min: 9,  max: 11, name: 'Malaysia' },
+        sg: { min: 8,  max: 8,  name: 'Singapore' },
     };
     const DEFAULT_LIMIT = { min: 7, max: 15 };
 
-    const phoneInput  = document.getElementById('whatsappInput');
-    const phoneHint   = document.getElementById('phoneHint');
-    const phoneError  = document.getElementById('phoneError');
+    const CURRENCIES = {
+        id: 'Rp',
+        my: 'RM',
+        sg: 'S$',
+        us: '$',
+        gb: '£',
+        au: 'A$',
+        jp: '¥',
+        kr: '₩',
+        cn: '¥',
+        ae: 'AED',
+        nl: '€',
+        de: '€',
+        fr: '€'
+    };
+
+    function updateSummary() {
+        if (cart.length === 0) return;
+        const country = iti.getSelectedCountryData().iso2;
+        const symbol = CURRENCIES[country] || 'Rp'; 
+        
+        let total = 0, html = '';
+        cart.forEach(item => {
+            let subtotal = item.price * item.quantity;
+            total += subtotal;
+            // Note: We're not doing real conversion rates yet, just changing the symbol/label
+            html += `<div>${item.name} x ${item.quantity} = ${symbol} ${subtotal.toLocaleString('id-ID')}</div>`;
+        });
+        html += `<hr style="margin:10px 0; border-top:1px solid #ccc;"><strong>Total: ${symbol} ${total.toLocaleString('id-ID')}</strong>`;
+        $('#summaryDetail').html(html);
+    }
 
     const iti = window.intlTelInput(phoneInput, {
-        initialCountry    : 'id',
-        preferredCountries: ['id', 'my', 'sg'],
-        separateDialCode  : true,
-        loadUtils         : () => import('https://cdn.jsdelivr.net/npm/intl-tel-input@23.7.3/build/js/utils.js'),
+        initialCountry: 'id',
+        separateDialCode: true,
+        loadUtils: () => import('https://cdn.jsdelivr.net/npm/intl-tel-input@23.7.3/build/js/utils.js'),
     });
 
     function getLimits() {
@@ -251,47 +310,51 @@
 
     function updateHint() {
         const country = iti.getSelectedCountryData();
-        const iso     = country.iso2;
-        const limits  = DIGIT_LIMITS[iso] || DEFAULT_LIMIT;
-        const label   = limits.name || country.name || iso.toUpperCase();
-        const range   = limits.min === limits.max
-            ? `${limits.min} digit`
-            : `${limits.min}–${limits.max} digit`;
-        phoneHint.textContent = `+${country.dialCode} · ${label} · ${range}`;
-        // enforce maxlength dynamically
-        phoneInput.setAttribute('maxlength', limits.max);
-        phoneInput.setAttribute('minlength', limits.min);
+        const limits = getLimits();
+        phoneHint.textContent = `Negara: ${country.name} (+${country.dialCode})`;
     }
 
-    // Strip non-digits and clamp to current country max on every keystroke
-    phoneInput.addEventListener('input', function () {
-        const max = getLimits().max;
-        this.value = this.value.replace(/[^0-9]/g, '').slice(0, max);
-        phoneError.style.display = 'none';
+    phoneInput.addEventListener('countrychange', () => {
+        updateHint();
+        updateSummary();
+    });
+    iti.promise.then(() => {
+        updateHint();
+        updateSummary();
     });
 
-    phoneInput.addEventListener('countrychange', updateHint);
-
-    // Run once after utils load so we get accurate label
-    iti.promise.then(updateHint);
+    // Strip non-digits and add dashes for "real phone" feel
+    phoneInput.addEventListener('input', function () {
+        const limits = getLimits();
+        let val = this.value.replace(/[^0-9]/g, '').slice(0, limits.max);
+        
+        let formatted = "";
+        for (let i = 0; i < val.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formatted += "-";
+            }
+            formatted += val[i];
+        }
+        
+        this.value = formatted;
+        phoneError.style.display = 'none';
+    });
 
     // ── Form submission ───────────────────────────────────────────────────────
     $('#orderForm').submit(function (e) {
         e.preventDefault();
 
-        // Validate phone number length manually to avoid strict library issues
         const digitsOnly = phoneInput.value.replace(/[^0-9]/g, '');
         const limits = getLimits();
 
-        if (digitsOnly.length < limits.min || digitsOnly.length > limits.max) {
-            phoneError.textContent = `Nomor tidak valid. Masukkan ${limits.min === limits.max ? limits.min : limits.min + '–' + limits.max} digit untuk negara yang dipilih.`;
+        if (digitsOnly.length < 7) {
+            phoneError.textContent = `Nomor terlalu pendek.`;
             phoneError.style.display = 'block';
             phoneInput.focus();
             return;
         }
-        phoneError.style.display = 'none';
 
-        const fullNumber = iti.getNumber(); // e.g. "+6281234567890"
+        const fullNumber = '+' + iti.getSelectedCountryData().dialCode + digitsOnly;
 
         let items = cart.map(i => ({ menu_id: i.id, quantity: i.quantity }));
         $.ajax({
@@ -302,15 +365,19 @@
                 customer_name: $('input[name="customer_name"]').val(),
                 whatsapp     : fullNumber,
                 address      : $('input[name="address"]').val(),
-                note         : $('input[name="note"]').val(),
+                note         : $('select[name="note"]').val(),
                 items        : items,
             },
             success: function (res) {
                 localStorage.removeItem('cart');
                 localStorage.removeItem('checkoutCart');
-                window.location.href = res.redirect_url;
+                // Show Popup instead of immediate redirect
+                document.getElementById('successModal').style.display = 'flex';
             },
-            error: function () { alert('Gagal memesan, coba lagi.'); },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                alert('Gagal memesan: ' + (xhr.responseJSON ? xhr.responseJSON.message : 'Silakan coba lagi.'));
+            },
         });
     });
 </script>
