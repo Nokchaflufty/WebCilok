@@ -90,24 +90,35 @@
                     <th>Alamat</th>
                     <th>No Telp</th>
                     <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($transactions as $tx)
-                <tr onclick="document.getElementById('order_id_input').value = '{{ $tx->id }}'; document.getElementById('selected_order_kode').innerText = '{{ $tx->id }}';" style="cursor: pointer;">
+                <tr onclick="showTransactionDetails('{{ $tx->id }}')" style="cursor: pointer;">
                     <td>{{ $tx->id }}</td>
                     <td>{{ $tx->customer_name }}</td>
-                    <td>{{ number_format($tx->total_price, 0, ',', '.') }}</td>
+                    <td id="total-cell-{{ $tx->id }}">{{ number_format($tx->total_price, 0, ',', '.') }}</td>
                     <td>{{ $tx->address }}</td>
                     <td>{{ $tx->phone }}</td>
-                    <td>{{ $tx->status }}</td>
+                    <td id="status-cell-{{ $tx->id }}">{{ $tx->status }}</td>
+                    <td>
+                        <button onclick="event.stopPropagation(); confirmDelete('{{ $tx->id }}')" style="background: none; border: none; color: #ff0000; cursor: pointer; font-size: 1.2rem;" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
                 @empty
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr><td colspan="7">Tidak ada transaksi.</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+
+    <!-- Hidden form for deletion -->
+    <form id="delete-form" method="POST" style="display:none;">
+        @csrf
+    </form>
 
     <h2 class="detail-section-title">Detail Transaksi</h2>
     
@@ -118,13 +129,14 @@
                     <th style="font-size: 2rem;">Nama Menu</th>
                     <th style="font-size: 2rem;">Jumlah</th>
                     <th style="font-size: 2rem;">Subtotal</th>
+                    <th style="font-size: 2rem;">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="detail-transaksi-body">
                 <!-- Empty rows to match UI design -->
-                <tr><td>&nbsp;</td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
             </tbody>
         </table>
     </div>
@@ -133,8 +145,9 @@
         @csrf
         <input type="hidden" name="order_id" id="order_id_input">
         <span style="color: var(--admin-text); font-weight: 700;">Update Status untuk ID: <span id="selected_order_kode">-</span></span>
-        <select name="status" class="status-select" required>
+        <select name="status" id="status_select" class="status-select" required>
             <option value="">Pilih Status</option>
+            <option value="pending">Pending</option>
             <option value="proses">Proses</option>
             <option value="selesai">Selesai</option>
             <option value="batal">Batal</option>
@@ -142,4 +155,103 @@
         <button type="submit" class="btn-update-status">Update Status</button>
     </form>
 </div>
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<script>
+function showTransactionDetails(id) {
+    // Update selected ID labels/inputs
+    document.getElementById('order_id_input').value = id;
+    document.getElementById('selected_order_kode').innerText = id;
+    
+    // Set current status in select
+    const statusCell = document.getElementById('status-cell-' + id);
+    if (statusCell) {
+        const currentStatus = statusCell.innerText.trim().toLowerCase();
+        const select = document.getElementById('status_select');
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === currentStatus) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
+    // Fetch details via AJAX
+    fetch(`/admin/transaksi/${id}/details`)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('detail-transaksi-body');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">Tidak ada item.</td></tr>';
+            } else {
+                data.forEach(item => {
+                    const row = `<tr>
+                        <td>${item.nama_menu}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.subtotal}</td>
+                        <td>
+                            <button onclick="removeItem(${item.id}, ${id})" style="background: none; border: none; color: #ff0000; cursor: pointer;">
+                                <i class="fas fa-minus-circle"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+                
+                // Add empty rows if needed to maintain design
+                if (data.length < 3) {
+                    for (let i = 0; i < 3 - data.length; i++) {
+                        tbody.innerHTML += '<tr><td>&nbsp;</td><td></td><td></td><td></td></tr>';
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching details:', error);
+            alert('Gagal mengambil detail transaksi.');
+        });
+}
+
+function removeItem(itemId, orderId) {
+    if (!confirm('Hapus item ini dari pesanan?')) return;
+
+    fetch(`/admin/transaksi/item/${itemId}/delete`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Refresh details
+            showTransactionDetails(orderId);
+            // Update total price in main table
+            const totalCell = document.getElementById(`total-cell-${orderId}`);
+            if (totalCell) totalCell.innerText = data.new_total;
+        } else {
+            alert('Gagal menghapus item.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menghapus item.');
+    });
+}
+function confirmDelete(id) {
+    showConfirm(
+        'Hapus Transaksi',
+        'Apakah Anda yakin ingin menghapus transaksi #' + id + '? Semua detail pesanan juga akan dihapus.',
+        function() {
+            const form = document.getElementById('delete-form');
+            form.action = '/admin/transaksi/' + id + '/delete';
+            form.submit();
+        }
+    );
+}
+</script>
 @endsection

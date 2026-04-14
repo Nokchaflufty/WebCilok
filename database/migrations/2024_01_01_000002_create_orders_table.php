@@ -15,7 +15,7 @@ return new class extends Migration
             $table->text('address');
             $table->string('note')->nullable();
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'processed', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'processed', 'completed', 'proses', 'selesai', 'batal'])->default('pending');
             $table->timestamps();
         });
     }

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -180,6 +182,52 @@ class AdminController extends Controller
         $order->update(['status' => $request->status]);
 
         return back()->with('success', 'Status transaksi berhasil diperbarui.');
+    }
+
+    public function transaksiItemDestroy($id)
+    {
+        $this->checkAuth();
+        $item = OrderItem::findOrFail($id);
+        $order = $item->order;
+        
+        $item->delete();
+
+        // Recalculate total price using fresh items from DB
+        $newTotal = $order->orderItems()->sum(DB::raw('price * quantity')) ?? 0;
+        $order->update(['total_price' => $newTotal]);
+
+        return response()->json([
+            'success' => true,
+            'new_total' => number_format($newTotal, 0, ',', '.')
+        ]);
+    }
+
+    public function transaksiDetails($id)
+    {
+        $this->checkAuth();
+        $order = Order::with('orderItems.menu')->findOrFail($id);
+        
+        $details = $order->orderItems->map(function($item) {
+            return [
+                'id' => $item->id,
+                'nama_menu' => $item->menu->name ?? 'Unknown',
+                'quantity' => $item->quantity,
+                'subtotal' => number_format($item->price * $item->quantity, 0, ',', '.')
+            ];
+        });
+
+        return response()->json($details);
+    }
+
+    public function transaksiDestroy($id)
+    {
+        $this->checkAuth();
+        $order = Order::findOrFail($id);
+        // Delete associated items first (optional if using cascade, but safe)
+        $order->orderItems()->delete();
+        $order->delete();
+
+        return redirect()->route('admin.transaksi')->with('success', 'Transaksi berhasil dihapus.');
     }
 
     public function riwayat()

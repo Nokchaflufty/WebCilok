@@ -27,7 +27,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/menu/{id}/delete', [AdminController::class, 'menuDestroy'])->name('admin.menu.delete');
     
     Route::get('/transaksi', [AdminController::class, 'transaksi'])->name('admin.transaksi');
+    Route::get('/transaksi/{id}/details', [AdminController::class, 'transaksiDetails'])->name('admin.transaksi.details');
+    Route::post('/transaksi/item/{id}/delete', [AdminController::class, 'transaksiItemDestroy'])->name('admin.transaksi.item_delete');
     Route::post('/transaksi/update-status', [AdminController::class, 'transaksiUpdateStatus'])->name('admin.transaksi.update_status');
+    Route::post('/transaksi/{id}/delete', [AdminController::class, 'transaksiDestroy'])->name('admin.transaksi.delete');
     Route::get('/riwayat', [AdminController::class, 'riwayat'])->name('admin.riwayat');
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 });
