@@ -82,6 +82,44 @@ class AdminController extends Controller
         return view('admin.profile_edit', compact('user'));
     }
 
+    public function profileUpdate(Request $request)
+    {
+        $user = Auth::user();
+        
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $data = [
+            'username' => $request->username,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('profile_image')) {
+            $file = $request->file('profile_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/profile'), $filename);
+            
+            // Delete old image if exists
+            if ($user->profile_image && file_exists(public_path('uploads/profile/' . $user->profile_image))) {
+                unlink(public_path('uploads/profile/' . $user->profile_image));
+            }
+            
+            $data['profile_image'] = $filename;
+        }
+
+        $user->update($data);
+
+        return back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
     public function menu()
     {
         $this->checkAuth(); 
@@ -234,8 +272,7 @@ class AdminController extends Controller
     public function riwayat()
     {
         $this->checkAuth();
-        // Mocking history for the UI
-        $history = [];
+        $history = OrderItem::with(['order', 'menu'])->latest()->get();
         return view('admin.riwayat', compact('history'));
     }
 

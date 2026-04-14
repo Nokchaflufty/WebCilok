@@ -65,12 +65,24 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Empty rows for design fidelity -->
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+                @forelse($history as $item)
+                <tr>
+                    <td>{{ $item->order->customer_name ?? 'N/A' }}</td>
+                    <td>{{ $item->menu->name ?? 'Unknown' }}</td>
+                    <td>{{ $item->quantity }}</td>
+                    <td>{{ $item->order->whatsapp ?? 'N/A' }}</td>
+                    <td>{{ $item->order->address ?? 'N/A' }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="5">Belum ada riwayat transaksi.</td></tr>
+                @endforelse
+                
+                <!-- Extra empty rows for design fidelity if list is short -->
+                @if(count($history) < 5)
+                    @for($i = 0; $i < (5 - count($history)); $i++)
+                    <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+                    @endfor
+                @endif
             </tbody>
         </table>
     </div>

@@ -29,16 +29,20 @@
         left: 60px;
         width: 150px;
         height: 150px;
-        background-color: #ff0000;
+        background: linear-gradient(135deg, #ff0000 0%, #d32f2f 100%);
         color: white;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 900;
-        font-size: 5rem;
+        font-size: 5.5rem;
         border: 10px solid var(--admin-content-bg);
-        box-shadow: 0 10px 20px rgba(255,0,0,0.2);
+        box-shadow: 0 10px 20px rgba(211, 47, 47, 0.4);
+        overflow: hidden;
+        z-index: 10;
+        background-size: cover;
+        background-position: center;
     }
     .profile-info-left {
         flex: 1;
@@ -131,7 +135,11 @@
     </div>
 
     <div class="profile-card-container">
-        <div class="profile-avatar-large">A</div>
+        <div class="profile-avatar-large" style="{{ $user->profile_image ? 'background-image: url(' . asset('uploads/profile/' . $user->profile_image) . ');' : '' }}">
+            @if(!$user->profile_image)
+                {{ strtoupper(substr($user->username, 0, 1)) }}
+            @endif
+        </div>
         <div class="profile-card">
             <div class="profile-info-left">
                 <h2 class="profile-name">{{ $user->name }}</h2>
@@ -173,4 +181,12 @@
     
     <a href="{{ route('admin.profile.edit') }}" class="btn-edit-profile">Edit Profile</a>
 </div>
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showAlert('Berhasil!', "{{ session('success') }}");
+    });
+</script>
+@endif
 @endsection

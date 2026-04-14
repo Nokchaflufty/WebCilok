@@ -248,28 +248,40 @@
 
     <script>
         // Modal Logic
-        let currentCallback = null;
-
-        function showConfirm(title, text, callback) {
+        window.showConfirm = function(title, text, callback) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalText').innerText = text;
+            
+            // UI Reset
+            document.getElementById('cancelBtn').style.display = 'block';
+            document.getElementById("confirmModal").querySelector('.modal-icon i').className = 'fas fa-exclamation-circle';
+            document.getElementById("confirmModal").querySelector('.modal-icon').style.color = '#ff0000';
+            
             document.getElementById('confirmModal').classList.add('active');
-            currentCallback = callback;
-        }
+            
+            document.getElementById('confirmBtn').onclick = function() {
+                if (callback) callback();
+                window.closeModal();
+            };
+        };
 
-        function closeModal() {
+        window.showAlert = function(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById("confirmModal").querySelector('.modal-icon i').className = 'fas fa-check-circle';
+            document.getElementById("confirmModal").querySelector('.modal-icon').style.color = '#4CAF50';
+            document.getElementById('confirmModal').classList.add('active');
+            document.getElementById('confirmBtn').onclick = function() { window.closeModal(); };
+        };
+
+        window.closeModal = function() {
             document.getElementById('confirmModal').classList.remove('active');
-        }
+        };
 
-        document.getElementById('confirmBtn').addEventListener('click', () => {
-            if (currentCallback) currentCallback();
-            closeModal();
-        });
-
-        // Close on overlay click
-        document.getElementById('confirmModal').addEventListener('click', (e) => {
-            if (e.target.id === 'confirmModal') closeModal();
-        });
+        document.getElementById('confirmModal').onclick = function(e) {
+            if (e.target.id === 'confirmModal') window.closeModal();
+        };
 
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');

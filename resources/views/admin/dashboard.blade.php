@@ -132,14 +132,14 @@
             <div class="stat-icon icon-transaksi"><i class="fas fa-chart-line"></i></div>
             <div class="stat-info">
                 <h4>Total Transaksi</h4>
-                <div class="count">{{ $totalTransaksi }}+</div>
+                <div class="count">+{{ $totalTransaksi }}</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon icon-menu"><i class="fas fa-book-open"></i></div>
             <div class="stat-info">
                 <h4>Menu</h4>
-                <div class="count">{{ $totalMenu }}+</div>
+                <div class="count">{{ $totalMenu }}</div>
             </div>
         </div>
         <div class="stat-card">

@@ -19,6 +19,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
     Route::get('/profile/edit', [AdminController::class, 'profileEdit'])->name('admin.profile.edit');
+    Route::post('/profile/update', [AdminController::class, 'profileUpdate'])->name('admin.profile.update');
     Route::get('/menu', [AdminController::class, 'menu'])->name('admin.menu');
     Route::get('/menu/create', [AdminController::class, 'menuCreate'])->name('admin.menu.create');
     Route::post('/menu/store', [AdminController::class, 'menuStore'])->name('admin.menu.store');
