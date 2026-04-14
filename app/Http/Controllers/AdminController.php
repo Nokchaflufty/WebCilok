@@ -210,6 +210,7 @@ class AdminController extends Controller
         $details = $order->orderItems->map(function($item) {
             return [
                 'id' => $item->id,
+                'order_id' => $item->order_id,
                 'nama_menu' => $item->menu->name ?? 'Unknown',
                 'quantity' => $item->quantity,
                 'subtotal' => number_format($item->price * $item->quantity, 0, ',', '.')

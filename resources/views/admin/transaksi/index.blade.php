@@ -84,7 +84,7 @@
         <table class="table-transaksi">
             <thead>
                 <tr>
-                    <th>Kode Transaksi</th>
+                    <th style="width: 100px;">Kode Transaksi</th>
                     <th>Nama</th>
                     <th>Total Pesanan</th>
                     <th>Alamat</th>
@@ -100,7 +100,7 @@
                     <td>{{ $tx->customer_name }}</td>
                     <td id="total-cell-{{ $tx->id }}">{{ number_format($tx->total_price, 0, ',', '.') }}</td>
                     <td>{{ $tx->address }}</td>
-                    <td>{{ $tx->phone }}</td>
+                    <td>{{ $tx->whatsapp }}</td>
                     <td id="status-cell-{{ $tx->id }}">{{ $tx->status }}</td>
                     <td>
                         <button onclick="event.stopPropagation(); confirmDelete('{{ $tx->id }}')" style="background: none; border: none; color: #ff0000; cursor: pointer; font-size: 1.2rem;" title="Hapus">
@@ -126,17 +126,18 @@
         <table class="table-transaksi">
             <thead>
                 <tr>
-                    <th style="font-size: 2rem;">Nama Menu</th>
-                    <th style="font-size: 2rem;">Jumlah</th>
-                    <th style="font-size: 2rem;">Subtotal</th>
-                    <th style="font-size: 2rem;">Aksi</th>
+                    <th style="width: 100px;">Kode Transaksi</th>
+                    <th>Nama Menu</th>
+                    <th>Jumlah</th>
+                    <th>Subtotal</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="detail-transaksi-body">
                 <!-- Empty rows to match UI design -->
-                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
             </tbody>
         </table>
     </div>
@@ -185,15 +186,16 @@ function showTransactionDetails(id) {
             tbody.innerHTML = '';
             
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">Tidak ada item.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5">Tidak ada item.</td></tr>';
             } else {
                 data.forEach(item => {
                     const row = `<tr>
+                        <td>${item.order_id}</td>
                         <td>${item.nama_menu}</td>
                         <td>${item.quantity}</td>
                         <td>${item.subtotal}</td>
                         <td>
-                            <button onclick="removeItem(${item.id}, ${id})" style="background: none; border: none; color: #ff0000; cursor: pointer;">
+                            <button onclick="removeItem(${item.id}, ${item.order_id})" style="background: none; border: none; color: #ff0000; cursor: pointer;">
                                 <i class="fas fa-minus-circle"></i>
                             </button>
                         </td>
@@ -204,7 +206,7 @@ function showTransactionDetails(id) {
                 // Add empty rows if needed to maintain design
                 if (data.length < 3) {
                     for (let i = 0; i < 3 - data.length; i++) {
-                        tbody.innerHTML += '<tr><td>&nbsp;</td><td></td><td></td><td></td></tr>';
+                        tbody.innerHTML += '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
                     }
                 }
             }

@@ -60,7 +60,7 @@
                     <th>Nama Pembeli</th>
                     <th>Nama Menu</th>
                     <th>Jumlah</th>
-                    <th>Nomor HP</th>
+                    <th>No Telp</th>
                     <th>Alamat</th>
                 </tr>
             </thead>
