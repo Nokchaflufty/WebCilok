@@ -11,7 +11,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return view('order');
+        $menus = Menu::all();
+        return view('order', compact('menus'));
     }
     
     public function success($id)
