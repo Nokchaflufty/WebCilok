@@ -90,7 +90,6 @@
                     <th>Alamat</th>
                     <th>No Telp</th>
                     <th>Status</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,14 +101,9 @@
                     <td>{{ $tx->address }}</td>
                     <td>{{ $tx->whatsapp }}</td>
                     <td id="status-cell-{{ $tx->id }}">{{ $tx->status }}</td>
-                    <td>
-                        <button onclick="event.stopPropagation(); confirmDelete('{{ $tx->id }}')" style="background: none; border: none; color: #ff0000; cursor: pointer; font-size: 1.2rem;" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
                 </tr>
                 @empty
-                <tr><td colspan="7">Tidak ada transaksi.</td></tr>
+                <tr><td colspan="6">Tidak ada transaksi.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -178,71 +172,53 @@ function showTransactionDetails(id) {
         }
     }
 
-    // Fetch details via AJAX
-    fetch(`/admin/transaksi/${id}/details`)
-        .then(response => response.json())
+    const tbody = document.getElementById('detail-transaksi-body');
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">Memuat...</td></tr>';
+
+    // Fetch details via AJAX — no-store to always get fresh data from server
+    fetch(`/admin/transaksi/${id}/details`, { cache: 'no-store' })
+        .then(response => {
+            if (!response.ok) throw new Error('Server error: ' + response.status);
+            return response.json();
+        })
         .then(data => {
-            const tbody = document.getElementById('detail-transaksi-body');
-            tbody.innerHTML = '';
+            let html = '';
             
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">Tidak ada item.</td></tr>';
+                html = '<tr><td colspan="5" style="text-align:center;">Tidak ada item.</td></tr>';
             } else {
                 data.forEach(item => {
-                    const row = `<tr>
+                    html += `<tr>
                         <td>${item.order_id}</td>
                         <td>${item.nama_menu}</td>
                         <td>${item.quantity}</td>
                         <td>${item.subtotal}</td>
                         <td>
-                            <button onclick="removeItem(${item.id}, ${item.order_id})" style="background: none; border: none; color: #ff0000; cursor: pointer;">
+                            <button onclick="hideDetails()" style="background: none; border: none; color: #ff0000; cursor: pointer;" title="Tutup Detail">
                                 <i class="fas fa-minus-circle"></i>
                             </button>
                         </td>
                     </tr>`;
-                    tbody.innerHTML += row;
                 });
                 
                 // Add empty rows if needed to maintain design
-                if (data.length < 3) {
-                    for (let i = 0; i < 3 - data.length; i++) {
-                        tbody.innerHTML += '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
-                    }
+                for (let i = data.length; i < 3; i++) {
+                    html += '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
                 }
             }
+
+            tbody.innerHTML = html;
         })
         .catch(error => {
             console.error('Error fetching details:', error);
-            alert('Gagal mengambil detail transaksi.');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat detail.</td></tr>';
         });
 }
 
-function removeItem(itemId, orderId) {
-    if (!confirm('Hapus item ini dari pesanan?')) return;
-
-    fetch(`/admin/transaksi/item/${itemId}/delete`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Refresh details
-            showTransactionDetails(orderId);
-            // Update total price in main table
-            const totalCell = document.getElementById(`total-cell-${orderId}`);
-            if (totalCell) totalCell.innerText = data.new_total;
-        } else {
-            alert('Gagal menghapus item.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat menghapus item.');
-    });
+function hideDetails() {
+    document.getElementById('detail-transaksi-body').innerHTML = '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
+    document.getElementById('selected_order_kode').innerText = '-';
+    document.getElementById('order_id_input').value = '';
 }
 function confirmDelete(id) {
     showConfirm(

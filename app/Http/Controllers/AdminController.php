@@ -224,20 +224,9 @@ class AdminController extends Controller
 
     public function transaksiItemDestroy($id)
     {
-        $this->checkAuth();
-        $item = OrderItem::findOrFail($id);
-        $order = $item->order;
-        
-        $item->delete();
-
-        // Recalculate total price using fresh items from DB
-        $newTotal = $order->orderItems()->sum(DB::raw('price * quantity')) ?? 0;
-        $order->update(['total_price' => $newTotal]);
-
-        return response()->json([
-            'success' => true,
-            'new_total' => number_format($newTotal, 0, ',', '.')
-        ]);
+        // Removed deletion logic as requested by user. 
+        // The button was intended for UI interaction only.
+        return response()->json(['success' => true]);
     }
 
     public function transaksiDetails($id)
@@ -281,6 +270,6 @@ class AdminController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('admin.login');
+        return redirect()->route('home');
     }
 }
