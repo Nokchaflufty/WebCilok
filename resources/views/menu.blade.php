@@ -27,7 +27,7 @@
         @foreach($menus as $menu)
         <div class="menu-item-card" data-id="{{ $menu->id }}" data-name="{{ $menu->name }}" data-price="{{ $menu->price_numeric }}">
             <div class="menu-img-wrapper">
-                <img src="{{ asset('images/Home_Wallpaper.png') }}" class="menu-img" alt="Menu Image">
+                <img src="{{ $menu->image ? asset('images/' . $menu->image) : asset('images/logo.jpeg') }}" class="menu-img" alt="{{ $menu->name }}" onerror="this.src='{{ asset('images/Home_Wallpaper.png') }}'">
             </div>
             <div class="menu-info">
                 <div class="menu-name">{{ $menu->name }}</div>
