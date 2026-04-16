@@ -18,14 +18,14 @@
     </div>
 
     <div class="menu-filters">
-        <button class="filter-btn active">Semua Menu</button>
-        <button class="filter-btn">Makanan</button>
-        <button class="filter-btn">Minuman</button>
+        <button class="filter-btn active" data-category="semua">Semua Menu</button>
+        <button class="filter-btn" data-category="makanan">Makanan</button>
+        <button class="filter-btn" data-category="minuman">Minuman</button>
     </div>
 
     <div class="menu-grid-container">
         @foreach($menus as $menu)
-        <div class="menu-item-card" data-id="{{ $menu->id }}" data-name="{{ $menu->name }}" data-price="{{ $menu->price_numeric }}">
+        <div class="menu-item-card" data-id="{{ $menu->id }}" data-name="{{ $menu->name }}" data-price="{{ $menu->price_numeric }}" data-category="{{ $menu->category }}">
             <div class="menu-img-wrapper">
                 <img src="{{ $menu->image ? asset('images/' . $menu->image) : asset('images/logo.jpeg') }}" class="menu-img" alt="{{ $menu->name }}" onerror="this.src='{{ asset('images/Home_Wallpaper.png') }}'">
             </div>
@@ -171,6 +171,23 @@
         localStorage.setItem('checkoutCart', JSON.stringify(cart));
         // Redirects to order form as requested
         window.location.href = "{{ route('order') }}";
+    });
+
+    // Filter logic
+    $('.filter-btn').click(function() {
+        $('.filter-btn').removeClass('active');
+        $(this).addClass('active');
+
+        const category = $(this).data('category');
+
+        $('.menu-item-card').each(function() {
+            const cardCat = $(this).data('category');
+            if (category === 'semua' || cardCat === category) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
     });
 
     // Initialize UI on load

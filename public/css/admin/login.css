@@ -163,6 +163,24 @@ body, html {
             transform: translateY(-3px);
             color: white;
         }
+        .alert-error {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(180, 0, 0, 0.15);
+            border: 1px solid rgba(180, 0, 0, 0.4);
+            color: #fff;
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            max-width: 450px;
+        }
+        .alert-error i {
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
 
         @media (max-width: 1200px) {
             .illustration-circle { width: 350px; height: 350px; }

@@ -53,7 +53,7 @@
             <h3 class="modal-title" id="modalTitle">Konfirmasi</h3>
             <p class="modal-text" id="modalText">Apakah Anda yakin ingin melakukan ini?</p>
             <div class="modal-actions">
-                <button class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
+                <button id="cancelBtn" class="btn-modal btn-cancel" onclick="closeModal()">Batal</button>
                 <button class="btn-modal btn-confirm" id="confirmBtn">Ya, Lanjutkan</button>
             </div>
         </div>

@@ -14,7 +14,7 @@
         <div class="menu-header-actions">
             <div class="search-container">
                 <i class="fas fa-search"></i>
-                <input type="text" class="search-input" placeholder="Cari Menu">
+                <input type="text" id="menuSearchInput" class="search-input" placeholder="Cari Menu" oninput="filterMenu(this.value)">
             </div>
             <a href="{{ route('admin.menu.create') }}" class="btn-tambah-menu">Tambah Menu</a>
         </div>
@@ -38,19 +38,38 @@
                 </div>
             </div>
             @empty
-            <div class="menu-admin-item">
-                <img src="{{ asset('images/logo.jpeg') }}" class="menu-admin-img" alt="Placeholder">
-                <div class="menu-admin-info">
-                    <h3 class="menu-admin-name">MENU 1</h3>
-                    <span class="menu-admin-price">Rp. 1.000</span>
-                </div>
-                <div class="menu-item-actions">
-                    <button class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
-                    <button class="action-btn btn-delete"><i class="fas fa-trash-alt"></i></button>
-                </div>
+            <div style="text-align: center; padding: 40px; color: var(--admin-text); opacity: 0.5;">
+                <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                <p style="font-weight: 600;">Belum ada menu. Klik <strong>Tambah Menu</strong> untuk mulai.</p>
             </div>
             @endforelse
         </div>
     </div>
 </div>
+
+<script>
+function filterMenu(query) {
+    const q = query.toLowerCase().trim();
+    const items = document.querySelectorAll('.menu-admin-item');
+    let found = 0;
+
+    items.forEach(item => {
+        const name = item.querySelector('.menu-admin-name').textContent.toLowerCase();
+        const match = name.includes(q);
+        item.style.display = match ? '' : 'none';
+        if (match) found++;
+    });
+
+    // Show/hide no-result message
+    let noResult = document.getElementById('no-search-result');
+    if (!noResult) {
+        noResult = document.createElement('div');
+        noResult.id = 'no-search-result';
+        noResult.style.cssText = 'text-align:center;padding:30px;color:var(--admin-text);opacity:0.5;font-weight:600;';
+        noResult.innerHTML = '<i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>Menu tidak ditemukan.';
+        document.querySelector('.menu-list').appendChild(noResult);
+    }
+    noResult.style.display = (found === 0 && q.length > 0) ? '' : 'none';
+}
+</script>
 @endsection

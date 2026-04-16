@@ -27,8 +27,8 @@
             
             <div class="edit-menu">
                 <a href="#" class="menu-item active">
-                    <i class="fas fa-key"></i>
-                    Password dan Username
+                    <i class="fas fa-user-edit"></i>
+                    Edit Profile
                 </a>
                 <a href="{{ route('admin.profile') }}" class="menu-item back-btn">
                     Kembali
@@ -38,7 +38,7 @@
 
         <!-- Right Form -->
         <div class="edit-profile-right">
-            <h3>Password & Username</h3>
+            <h3>Edit Profile</h3>
             
             @if(session('success'))
                 <div style="background: rgba(76, 175, 80, 0.1); color: #2e7d32; padding: 15px 25px; border-radius: 15px; margin-bottom: 25px; border: 1px solid rgba(76, 175, 80, 0.2); font-weight: 700; display: flex; align-items: center; gap: 10px;">

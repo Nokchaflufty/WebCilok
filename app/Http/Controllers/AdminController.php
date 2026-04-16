@@ -138,6 +138,9 @@ class AdminController extends Controller
         $this->checkAuth();
         $request->validate([
             'name' => 'required',
+            'description' => 'required',
+            'category' => 'required|in:makanan,minuman',
+            'status' => 'required|in:tersedia,habis',
             'price' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -150,6 +153,9 @@ class AdminController extends Controller
 
         Menu::create([
             'name' => $request->name,
+            'description' => $request->description,
+            'category' => $request->category,
+            'status' => $request->status,
             'price' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
             'price_numeric' => $request->price,
             'image' => $imageName
@@ -170,6 +176,9 @@ class AdminController extends Controller
         $this->checkAuth();
         $request->validate([
             'name' => 'required',
+            'description' => 'required',
+            'category' => 'required|in:makanan,minuman',
+            'status' => 'required|in:tersedia,habis',
             'price' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -177,6 +186,9 @@ class AdminController extends Controller
         $menu = Menu::findOrFail($id);
         $data = [
             'name' => $request->name,
+            'description' => $request->description,
+            'category' => $request->category,
+            'status' => $request->status,
             'price' => 'Rp. ' . number_format($request->price, 0, ',', '.'),
             'price_numeric' => $request->price,
         ];

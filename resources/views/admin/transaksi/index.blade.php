@@ -52,14 +52,13 @@
                     <th>Nama Menu</th>
                     <th>Jumlah</th>
                     <th>Subtotal</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody id="detail-transaksi-body">
                 <!-- Empty rows to match UI design -->
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
-                <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
+                <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
             </tbody>
         </table>
     </div>
@@ -67,7 +66,6 @@
     <form action="{{ route('admin.transaksi.update_status') }}" method="POST" class="update-status-bar">
         @csrf
         <input type="hidden" name="order_id" id="order_id_input">
-        <span style="color: var(--admin-text); font-weight: 700;">Update Status untuk ID: <span id="selected_order_kode">-</span></span>
         <select name="status" id="status_select" class="status-select" required>
             <option value="">Pilih Status</option>
             <option value="pending">Pending</option>
@@ -83,9 +81,8 @@
 
 <script>
 function showTransactionDetails(id) {
-    // Update selected ID labels/inputs
+    // Update selected ID input
     document.getElementById('order_id_input').value = id;
-    document.getElementById('selected_order_kode').innerText = id;
     
     // Set current status in select
     const statusCell = document.getElementById('status-cell-' + id);
@@ -113,7 +110,7 @@ function showTransactionDetails(id) {
             let html = '';
             
             if (data.length === 0) {
-                html = '<tr><td colspan="5" style="text-align:center;">Tidak ada item.</td></tr>';
+                html = '<tr><td colspan="4" style="text-align:center;">Tidak ada item.</td></tr>';
             } else {
                 data.forEach(item => {
                     html += `<tr>
@@ -121,17 +118,12 @@ function showTransactionDetails(id) {
                         <td>${item.nama_menu}</td>
                         <td>${item.quantity}</td>
                         <td>${item.subtotal}</td>
-                        <td>
-                            <button onclick="hideDetails()" style="background: none; border: none; color: #ff0000; cursor: pointer;" title="Tutup Detail">
-                                <i class="fas fa-minus-circle"></i>
-                            </button>
-                        </td>
                     </tr>`;
                 });
                 
                 // Add empty rows if needed to maintain design
                 for (let i = data.length; i < 3; i++) {
-                    html += '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
+                    html += '<tr><td>&nbsp;</td><td></td><td></td><td></td></tr>';
                 }
             }
 
@@ -139,13 +131,12 @@ function showTransactionDetails(id) {
         })
         .catch(error => {
             console.error('Error fetching details:', error);
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal memuat detail.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat detail.</td></tr>';
         });
 }
 
 function hideDetails() {
-    document.getElementById('detail-transaksi-body').innerHTML = '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>';
-    document.getElementById('selected_order_kode').innerText = '-';
+    document.getElementById('detail-transaksi-body').innerHTML = '<tr><td>&nbsp;</td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td></tr>';
     document.getElementById('order_id_input').value = '';
 }
 function confirmDelete(id) {

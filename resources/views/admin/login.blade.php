@@ -49,6 +49,13 @@
                     Ingat saya
                 </label>
 
+                @if(session('error'))
+                    <div class="alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <button type="submit" class="btn-login-submit">LOGIN</button>
             </form>
         </div>

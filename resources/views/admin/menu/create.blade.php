@@ -24,12 +24,34 @@
                 <input type="text" name="name" class="form-input-sm" required>
             </div>
             <div class="form-group-sm">
-                <label>Harga</label>
-                <div style="position: relative;">
-                    <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--admin-text); opacity: 0.6;">Rp</span>
-                    <input type="text" id="price_display" class="form-input-sm" style="padding-left: 45px;" placeholder="0" required>
-                    <input type="hidden" name="price" id="price_real">
+                <label>Deskripsi</label>
+                <textarea name="description" class="form-input-sm form-textarea-sm" rows="3" placeholder="Tuliskan deskripsi menu..." required></textarea>
+            </div>
+            <div class="form-row-sm">
+                <div class="form-group-sm">
+                    <label>Harga</label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-weight: 800; color: var(--admin-text); opacity: 0.6;">Rp</span>
+                        <input type="text" id="price_display" class="form-input-sm" style="padding-left: 45px;" placeholder="0" required>
+                        <input type="hidden" name="price" id="price_real">
+                    </div>
                 </div>
+                <div class="form-group-sm">
+                    <label>Kategori</label>
+                    <select name="category" class="form-input-sm" required>
+                        <option value="" disabled selected>Pilih kategori</option>
+                        <option value="makanan">Makanan</option>
+                        <option value="minuman">Minuman</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group-sm">
+                <label>Status</label>
+                <select name="status" class="form-input-sm" required>
+                    <option value="" disabled selected>Pilih status</option>
+                    <option value="tersedia">Tersedia</option>
+                    <option value="habis">Habis</option>
+                </select>
             </div>
             <div class="form-actions-sm">
                 <button type="submit" class="btn-simpan-sm">Simpan</button>
