@@ -136,3 +136,24 @@
             text-align: center;
         }
     }
+
+    /* Premium Chart Styles */
+    .chart-wrapper {
+        position: relative;
+        height: 350px;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .transactions-table-card.chart-card {
+        padding: 25px 25px 80px 25px !important;
+    }
+
+    .btn-lihat-semua {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .btn-lihat-semua:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+    }

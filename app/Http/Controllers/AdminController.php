@@ -49,22 +49,27 @@ class AdminController extends Controller
     {
         $this->checkAuth();
 
-        // Mock data or real data from DB
         $totalTransaksi = Order::count(); 
         $totalMenu = Menu::count();
         $pendapatanHariIni = Order::whereDate('created_at', today())->sum('total_price') ?? 0;
         
-        // Real recent transactions from DB
-        $recentTransactions = Order::orderBy('created_at', 'desc')->take(5)->get()->map(function($order) {
+        // Get sales statistics for the current week (Monday to Sunday) in Indonesian
+        \Carbon\Carbon::setLocale('id');
+        $startOfWeek = today()->startOfWeek();
+
+        $salesStats = collect(range(0, 6))->map(function($daysFromMonday) use ($startOfWeek) {
+            $date = $startOfWeek->copy()->addDays($daysFromMonday);
+            $totalSales = Order::whereDate('created_at', $date)->sum('total_price') ?? 0;
             return [
-                'nama' => $order->customer_name,
-                'total' => $order->total_price,
-                'waktu' => $order->created_at->isoFormat('dddd, D MMM - HH:mm'),
-                'status' => $order->status ?? 'proses'
+                'label' => $date->isoFormat('dddd'),
+                'value' => (int)$totalSales
             ];
         });
 
-        return view('admin.dashboard', compact('totalTransaksi', 'totalMenu', 'pendapatanHariIni', 'recentTransactions'));
+        $chartLabels = $salesStats->pluck('label')->toArray();
+        $chartData = $salesStats->pluck('value')->toArray();
+
+        return view('admin.dashboard', compact('totalTransaksi', 'totalMenu', 'pendapatanHariIni', 'chartLabels', 'chartData'));
     }
 
     public function profile()
