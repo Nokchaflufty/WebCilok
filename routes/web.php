@@ -37,7 +37,4 @@ Route::prefix('admin')->group(function () {
     Route::get('/riwayat', [AdminController::class, 'riwayat'])->name('admin.riwayat');
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-    Route::get('/test-users', function() {
-    return \App\Models\User::all();
-    });
 });
