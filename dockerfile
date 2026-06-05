@@ -44,4 +44,4 @@ RUN echo '<VirtualHost *:80>\n\
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force && php artisan db:seed --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force --skip-locks 2>/dev/null || true && php artisan db:seed --force && apache2-foreground"]
