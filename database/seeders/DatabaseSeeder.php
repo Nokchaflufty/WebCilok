@@ -13,11 +13,13 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        User::factory()->create([
-            'name'     => 'Admin',
-            'username' => 'admin',
-            'email'    => 'admin@webcilok.com',
-            'password' => Hash::make('admin123'),
-        ]);
+        User::firstOrCreate(
+            ['username' => 'admin'],
+            [
+                'name'     => 'Admin',
+                'email'    => 'admin@webcilok.com',
+                'password' => Hash::make('admin123'),
+            ]
+        );
     }
 }
