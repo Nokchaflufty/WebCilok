@@ -44,4 +44,4 @@ RUN echo '<VirtualHost *:80>\n\
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan config:clear && php artisan route:clear && php artisan migrate --force 2>&1 || true && php artisan db:seed --force && apache2-foreground"]
+CMD ["sh", "-c", "rm -rf bootstrap/cache/* && php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan migrate --force 2>&1 || true && php artisan db:seed --force && apache2-foreground"]
