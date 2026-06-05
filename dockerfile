@@ -25,7 +25,7 @@ RUN echo "APP_KEY=base64:B4pAsDlZJOJ2+cvIGe8KWSLhZJCiHyjGpYI4RrsPgkA=" > .env \
     && echo "SESSION_DRIVER=database" >> .env \
     && echo "CACHE_STORE=database" >> .env
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 RUN npm install && npm run build
 
