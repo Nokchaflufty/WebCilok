@@ -13,6 +13,10 @@ WORKDIR /var/www/html
 
 COPY . .
 
+RUN echo "APP_KEY=base64:B4pAsDlZJOJ2+cvIGe8KWSLhZJCiHyjGpYI4RrsPgkA=" > .env \
+    && echo "APP_ENV=production" >> .env \
+    && echo "DB_CONNECTION=pgsql" >> .env
+
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install && npm run build
@@ -32,4 +36,4 @@ RUN echo '<VirtualHost *:80>\n\
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan config:cache && php artisan migrate:fresh --force && php artisan db:seed --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force && php artisan db:seed --force && apache2-foreground"]
