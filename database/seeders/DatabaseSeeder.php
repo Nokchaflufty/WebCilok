@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +17,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name'     => 'Admin',
                 'email'    => 'admin@webcilok.com',
-                'password' => Hash::make('admin123'),
+                'password' => 'admin123',
             ]
         );
     }
