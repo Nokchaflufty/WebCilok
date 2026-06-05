@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -36,8 +35,10 @@ class AdminController extends Controller
             'password' => ['required'],
         ]);
 
-        // Attempt to log in using 'username' instead of 'email'
-        if (Auth::attempt(['username' => $credentials['username'], 'password' => $credentials['password']], $request->remember)) {
+        // Manual login using plain-text password (no hashing)
+        $user = User::where('username', $credentials['username'])->first();
+        if ($user && $user->password === $credentials['password']) {
+            Auth::login($user, $request->remember ?? false);
             $request->session()->regenerate();
             return redirect()->intended(route('admin.dashboard'));
         }
@@ -75,7 +76,7 @@ class AdminController extends Controller
     public function profile()
     {
         $this->checkAuth();
-
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         return view('admin.profile', compact('user'));
     }
@@ -83,12 +84,14 @@ class AdminController extends Controller
     public function profileEdit()
     {
         $this->checkAuth();
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         return view('admin.profile_edit', compact('user'));
     }
 
     public function profileUpdate(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         $request->validate([
@@ -104,7 +107,7 @@ class AdminController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
+            $data['password'] = $request->password;
         }
 
         if ($request->hasFile('profile_image')) {

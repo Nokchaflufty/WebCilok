@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -15,7 +16,7 @@ class OrderController extends Controller
         return view('order', compact('menus'));
     }
     
-    public function success($id)
+    public function success(int $id)
     {
         $order = Order::with('orderItems.menu')->findOrFail($id);
         return view('success', compact('order'));
@@ -73,7 +74,7 @@ class OrderController extends Controller
         ]);
     }
 
-    private function sendWhatsAppNotification($order)
+    private function sendWhatsAppNotification(Order $order)
     {
         $message = "Pesanan Baru! #{$order->id}\n\n";
         $message .= "Nama: {$order->customer_name}\n";
@@ -89,6 +90,6 @@ class OrderController extends Controller
         $message .= "\nTotal: Rp. " . number_format($order->total_price, 0, ',', '.') . "\n\n";
         $message .= "Terima kasih telah memesan di Warung Cilok Pedas Mak Pik!";
 
-        \Log::info("WhatsApp Notification: " . $message);
+        Log::info("WhatsApp Notification: " . $message);
     }
 }

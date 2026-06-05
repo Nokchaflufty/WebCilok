@@ -99,7 +99,7 @@
                         Kirim Pesanan <i class="fa-solid fa-paper-plane"></i>
                     </button>
                     <div class="form-disclaimer">
-                        Dengan menekan tombol di atas, pesanan kamu akan diteruskan langsung ke WhatsApp Mak Pik.
+                        Dengan menekan tombol di atas, pesanan kamu akan kami proses oleh tim kami.
                     </div>
                 </form>
             </div>
@@ -122,15 +122,10 @@
 
 <div id="successModal" class="modal-overlay">
     <div class="success-modal">
-        <div class="modal-icon-success" style="color: #25D366;"><i class="fab fa-whatsapp"></i></div>
+        <div class="modal-icon-success" style="color: #10b981;"><i class="fas fa-check-circle"></i></div>
         <h3 class="modal-title-success">Pesanan Berhasil Dicatat!</h3>
-        <p class="modal-text-success"> Pesanan akan cepat diproses.</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-modal-ok" style="background: #e2e8f0; color: #475569;" onclick="window.location.href='{{ route('home') }}'">Tutup</button>
-            <a id="waRedirectLink" href="#" target="_blank" style="text-decoration: none; width: 100%;">
-                <button class="btn-modal-ok" style="background: #25D366; color: white;">Kirim Sekarang <i class="fa-solid fa-paper-plane" style="margin-left: 5px;"></i></button>
-            </a>
-        </div>
+        <p class="modal-text-success">Pesanan kamu sudah kami terima dan akan segera kami proses.</p>
+        <button class="btn-modal-ok" onclick="window.location.href='{{ route('home') }}'">Tutup</button>
     </div>
 </div>
 @endsection
@@ -285,29 +280,9 @@
                 items        : items,
             },
             success: function (res) {
-                // Build WA Message
-                let waText = `Permisi, Saya atas nama *${customer_name}*, memesan cilok melalui website dengan rincian pemesanan:\n\n`;
-                waText += `📍 *Alamat Pengiriman*:\n${address}\n\n`;
-                waText += `🛒 *Detail Pesanan*:\n`;
-                
-                let total = 0;
-                cart.forEach(item => {
-                    const subtotal = item.price * item.quantity;
-                    total += subtotal;
-                    waText += `- ${item.name} x${item.quantity} = Rp ${subtotal.toLocaleString('id-ID')}\n`;
-                });
-                
-                waText += `\n*TOTAL: Rp ${total.toLocaleString('id-ID')}*\n`;
-                if (note && note.trim() !== '') waText += `\n📝 *Catatan*:\n${note}\n`;
-                
-                const waNumber = '6285233159859'; // Target admin WhatsApp number
-                const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
-                
                 localStorage.removeItem('cart');
                 localStorage.removeItem('checkoutCart');
-                
-                // Update Modal Content & Show
-                $('#waRedirectLink').attr('href', waUrl);
+
                 document.getElementById('successModal').style.display = 'flex';
                 btn.html(originalText).prop('disabled', false);
             },
