@@ -15,7 +15,15 @@ COPY . .
 
 RUN echo "APP_KEY=base64:B4pAsDlZJOJ2+cvIGe8KWSLhZJCiHyjGpYI4RrsPgkA=" > .env \
     && echo "APP_ENV=production" >> .env \
-    && echo "DB_CONNECTION=pgsql" >> .env
+    && echo "APP_DEBUG=false" >> .env \
+    && echo "DB_CONNECTION=pgsql" >> .env \
+    && echo "DB_HOST=dpg-d8enbuc2m8qs73940q10-a" >> .env \
+    && echo "DB_PORT=5432" >> .env \
+    && echo "DB_DATABASE=toko_thrift_db" >> .env \
+    && echo "DB_USERNAME=toko_thrift_db_user" >> .env \
+    && echo "DB_PASSWORD=HeA9tipv0f6Cso1EeRtNOIU01d6TfcKN" >> .env \
+    && echo "SESSION_DRIVER=database" >> .env \
+    && echo "CACHE_STORE=database" >> .env
 
 RUN composer install --no-dev --optimize-autoloader
 
