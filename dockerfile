@@ -44,4 +44,4 @@ RUN echo '<VirtualHost *:80>\n\
 
 EXPOSE 80
 
-CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force 2>/dev/null || true && php artisan db:seed --force && apache2-foreground"]
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force 2>&1 | grep -v 'already exists' || true && php artisan db:seed --force && apache2-foreground"]
