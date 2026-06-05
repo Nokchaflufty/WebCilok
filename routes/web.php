@@ -37,9 +37,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/riwayat', [AdminController::class, 'riwayat'])->name('admin.riwayat');
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-    Route::get('/test-login', function() {
-        $user = \App\Models\User::where('username', 'admin')->first();
-        if (!$user) return 'User tidak ada';
-        return 'Password di DB: ' . $user->password;
+    Route::get('/test-users', function() {
+    return \App\Models\User::all();
     });
 });
