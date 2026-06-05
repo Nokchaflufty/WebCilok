@@ -36,4 +36,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/transaksi/{id}/delete', [AdminController::class, 'transaksiDestroy'])->name('admin.transaksi.delete');
     Route::get('/riwayat', [AdminController::class, 'riwayat'])->name('admin.riwayat');
     Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+    Route::get('/test-login', function() {
+        $user = \App\Models\User::where('username', 'admin')->first();
+        if (!$user) return 'User tidak ada';
+        return 'Password di DB: ' . $user->password;
+    });
 });
